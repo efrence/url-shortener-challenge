@@ -1,4 +1,5 @@
 const uuidv4 = require('uuid/v4');
+const hashGen = require('./generateHash');
 const { domain } = require('../../environment');
 const SERVER = `${domain.protocol}://${domain.host}`;
 
@@ -19,14 +20,10 @@ async function getUrl(hash) {
 
 /**
  * Generate an unique hash-ish- for an URL.
- * TODO: Deprecated the use of UUIDs.
- * TODO: Implement a shortening algorithm
- * @param {string} id
  * @returns {string} hash
  */
-function generateHash(url) {
-  // return uuidv5(url, uuidv5.URL);
-  return uuidv4();
+function generateHash() {
+  return hashGen.generateHash();
 }
 
 /**
