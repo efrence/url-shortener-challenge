@@ -71,6 +71,9 @@ describe('Post /', function(){
       .set('Accept', 'json')
       .then((res) => {
         expect(res.statusCode).to.be.equal(200);
+        expect(res.body).to.have.property('hash');
+        expect(res.body).to.have.property('removeUrl');
+        expect(res.body).to.have.property('shorten');
         done();
       });
   });
@@ -117,6 +120,11 @@ describe('Get /:hash', function(){
           .set('Accept', 'application/json')
           .end((err, res) => {
             expect(res.body.visits).to.be.equal(0);
+            // hidden fields
+            expect(res.body.protocol).to.be.equal(undefined);
+            expect(res.body.domain).to.be.equal(undefined);
+            expect(res.body.path).to.be.equal(undefined);
+            expect(res.body).to.have.property('createdAt');
             expect(res.body.hash).to.be.equal(urlhash);
             done();
           });

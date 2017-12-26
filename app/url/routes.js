@@ -12,9 +12,6 @@ router.get('/:hash', async (req, res, next) => {
     return next(notFound);
   }
 
-  // TODO: Hide fields that shouldn't be public
-
-
   // Behave based on the requested format using the 'Accept' header.
   // If header is not provided or is */* redirect instead.
   const accepts = req.get('Accept');

@@ -1,7 +1,8 @@
 const mongo = require('../../server/mongodb');
 const mongoose = require('mongoose');
+const mongooseHidden = require('mongoose-hidden')({ hidden: { _id: true } })
 
-module.exports = mongo.model('Url', new mongoose.Schema({
+let UrlSchema =  new mongoose.Schema({
   url: {
     type: String,
     required: true
@@ -27,9 +28,9 @@ module.exports = mongo.model('Url', new mongoose.Schema({
     required: true
   },
 
-  protocol: String,
-  domain: String,
-  path: String,
+  protocol: {type: String, hide: true},
+  domain: {type: String, hide: true},
+  path: {type: String, hide: true},
 
   createdAt: {
     type: Date,
@@ -42,4 +43,9 @@ module.exports = mongo.model('Url', new mongoose.Schema({
     required: true,
     default: true
   }
-}));
+});
+
+
+UrlSchema.plugin(mongooseHidden)
+
+module.exports = mongo.model('Url', UrlSchema);
