@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise; // Use JavaScript promises
 const { Mongo } = require('../environment');
-
-const uri = `mongodb://${Mongo.HOST}:${Mongo.PORT}/${Mongo.NAME}`;
+let dbName = process.env.TEST === 'true' ? Mongo.NAME_TEST : Mongo.NAME;
+const uri = `mongodb://${Mongo.HOST}:${Mongo.PORT}/${dbName}`;
 
 /**
  , {
