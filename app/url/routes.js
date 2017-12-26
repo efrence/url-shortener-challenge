@@ -10,8 +10,6 @@ router.get('/:hash', async (req, res, next) => {
 
   // TODO: Hide fields that shouldn't be public
 
-  // TODO: Register visit
-
 
   // Behave based on the requested format using the 'Accept' header.
   // If header is not provided or is */* redirect instead.
@@ -25,6 +23,7 @@ router.get('/:hash', async (req, res, next) => {
       res.json(source);
       break;
     default:
+      await url.incrementVisit(source); 
       res.redirect(source.url);
       break;
   }

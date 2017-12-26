@@ -14,10 +14,13 @@ module.exports = mongo.model('Url', new mongoose.Schema({
     required: true,
     unique: true
   },
+
   isCustom: {
     type: Boolean,
     required: true
   },
+
+  visits: Number,
 
   removeToken: {
     type: String,

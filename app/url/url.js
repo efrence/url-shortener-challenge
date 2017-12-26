@@ -53,6 +53,7 @@ async function shorten(url, hash) {
   const protocol = urlComponents.protocol || '';
   const domain = `${urlComponents.host || ''}${urlComponents.auth || ''}`;
   const path = `${urlComponents.path || ''}${urlComponents.hash || ''}`;
+  const visits = 0
 
   // Generate a token that will alow an URL to be removed (logical)
   const removeToken = generateRemoveToken();
@@ -64,6 +65,7 @@ async function shorten(url, hash) {
     domain,
     path,
     hash,
+    visits,
     isCustom: false,
     removeToken,
     active: true
@@ -81,6 +83,11 @@ async function shorten(url, hash) {
 
 }
 
+async function incrementVisit(source){
+  await source.update({$inc: {visits:1}});
+  return await source.save();
+}
+
 /**
  * Validate URI
  * @param {any} url
@@ -95,5 +102,6 @@ module.exports = {
   getUrl,
   generateHash,
   generateRemoveToken,
-  isValid
+  isValid,
+  incrementVisit
 }

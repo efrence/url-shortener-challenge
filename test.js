@@ -101,7 +101,9 @@ describe('Get /:hash', function(){
     db.collections.urls.remove();  
   });  
   var urlhash = null;
-  it('create basic url', function(done){ 
+
+  it('response with json when header Accept json is set', function(done){
+    this.timeout(3000);
     let url = 'http://test.com';
     request(app)
       .post('/')
@@ -110,21 +112,32 @@ describe('Get /:hash', function(){
       .end((err, res) => {
         expect(res.statusCode).to.be.equal(200);
         urlhash = res.body.hash;
-        done();
+        request(app)
+          .get(`/${urlhash}`)
+          .set('Accept', 'application/json')
+          .end((err, res) => {
+            expect(res.body.visits).to.be.equal(0);
+            expect(res.body.hash).to.be.equal(urlhash);
+            done();
+          });
       });
   });
 
-  it('response with json when header Accept json is set', function(done){
-    this.timeout(3000);
-    setTimeout(function(){
+  it('redirects to original url and increase visits counter', function(done){
     request(app)
       .get(`/${urlhash}`)
-      .set('Accept', 'application/json')
       .end((err, res) => {
-        expect(res.body.hash).to.be.equal(urlhash)
-        done();
+        expect(res.statusCode).to.be.equal(302);
+        request(app)
+          .get(`/${urlhash}`)
+          .set('Accept', 'application/json')
+          .end((err, res) => {
+            expect(res.body.visits).to.be.equal(1);
+            done();
+          });  
       });
-    }, 1000);
+
   });
+
 });
 
