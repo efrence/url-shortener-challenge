@@ -138,6 +138,54 @@ describe('Get /:hash', function(){
       });
 
   });
+});
+
+describe('Delete /:hash/remove/:removeToken', function(){
+  beforeEach(function(){
+    db.collections.urls.remove();  
+  });  
+  var urlhash = null;
+
+  it('returns 404 when hash match but not removeToken', function(done){
+    this.timeout(3000);
+    let url = 'http://test.com';
+    request(app)
+      .post('/')
+      .send({url: url})
+      .set('Accept', 'json')
+      .end((err, res) => {
+        expect(res.statusCode).to.be.equal(200);
+        urlhash = res.body.hash;
+        request(app)
+          .delete(`/${urlhash}/remove/invalidtoken`)
+          .end((err, res) => {
+            expect(res.statusCode).to.be.equal(404);
+            done();
+          });
+       });
+  });
+
+  it('returns 202 when hash and removeToken match', function(done){
+    this.timeout(3000);
+    let url = 'http://test.com';
+    let removeToken = null;
+    request(app)
+      .post('/')
+      .send({url: url})
+      .set('Accept', 'json')
+      .end((err, res) => {
+        expect(res.statusCode).to.be.equal(200);
+        removeToken = res.body.removeUrl.split('remove/')[1];
+        urlhash = res.body.hash;
+        request(app)
+          .delete(`/${urlhash}/remove/${removeToken}`)
+          .end((err, res) => {
+            expect(res.statusCode).to.be.equal(202);
+            done();
+          });
+       });
+  });
+  
 
 });
 

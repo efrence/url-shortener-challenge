@@ -83,8 +83,24 @@ async function shorten(url, hash) {
 
 }
 
+/**
+ * increment visits counter.
+ * @param {object} source
+ * @returns {object}
+ */
 async function incrementVisit(source){
   await source.update({$inc: {visits:1}});
+  return await source.save();
+}
+
+/**
+ * marks url active state as false
+ * @param {object} source
+ * @returns {object}
+ */
+
+async function softDelete(source){
+  source.active = false;
   return await source.save();
 }
 
@@ -103,5 +119,6 @@ module.exports = {
   generateHash,
   generateRemoveToken,
   isValid,
-  incrementVisit
+  incrementVisit,
+  softDelete
 }
